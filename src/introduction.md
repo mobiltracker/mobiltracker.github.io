@@ -1,3 +1,3 @@
 # Introduction
 
-This is an introduction explaining the book. Now I've written more in the introduction and you undestood everything. Testando o git ignore. Testando 2
+This book has as the main goal to serve as a catalog of the best practices and good examples of code to help us code better.
