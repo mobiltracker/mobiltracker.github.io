@@ -1,0 +1,6 @@
+[book]
+authors = ["bbeneduzib"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Mobiltracker MdBook"
