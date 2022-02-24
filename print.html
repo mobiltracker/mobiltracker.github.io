@@ -1,0 +1,549 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Mobiltracker MdBook</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="things.html"><strong aria-hidden="true">3.</strong> Things</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Mobiltracker MdBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>This book has as the main goal to serve as a catalog of the best practices and good examples of code to help us code better.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="best-practices-for-writing-tests"><a class="header" href="#best-practices-for-writing-tests">Best Practices for Writing Tests</a></h1>
+<h2 id="introduction-1"><a class="header" href="#introduction-1">Introduction</a></h2>
+<p>In this documentation, we'll talk about good habits for when you're coding a test.</p>
+<p>Another good source to know the best practices is the <a href="https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Documentation for writing Unit Tests</a>. We can also use many of those tips when writing Integration Tests.</p>
+<h3 id="example-file"><a class="header" href="#example-file">Example File</a></h3>
+<p>This issue is part of an idea to have a catalog of examples of good code. The example chosen in this case is the <a href="https://github.com/mobiltracker/mobiltracker/blob/master/Mobiltracker/Mobiltracker.Api.Core.Tests/Controllers/Commands.cs">Commands Controller tests</a> in Mobiltracker API.</p>
+<h2 id="test-driven-development"><a class="header" href="#test-driven-development">Test Driven Development</a></h2>
+<p>We follow the Test Driven Development (TDD), a software development technique in which we write the test first, watch it as it breaks, and then implement the functions necessary to solve our problems. This way, we can help to avoid a false positive.</p>
+<p>Another good practice is to begin by testing the errors we know are most likely to happen. Then, by leaving the successful test for last, we can be more confident that we have a code that is more robust and less susceptible to failure.</p>
+<h2 id="naming-and-organizing"><a class="header" href="#naming-and-organizing">Naming and Organizing</a></h2>
+<p>When we're writing API Integration Tests, it's good to keep them organized so they'll be easier to maintain. A good way to do it is by having a folder called Controllers and dividing the tests for each controller in a different file. Such as this example:</p>
+<p><img src="https://user-images.githubusercontent.com/32579593/152409291-6f762769-d5d8-4dc8-9a61-7ef437f2fb26.png" alt="image" /></p>
+<p>Inside the file, the namespace must be the name of the controller. And each of the possible routes should be divided into a different class.</p>
+<pre><code class="language-C#">namespace CommandsController
+{
+  public class GET_TrackerCommands
+  {
+    [...]
+  }
+
+  public class GET_CommandPatterns
+  {
+    [...]
+  }
+
+  public class POST_CommandRequest
+  {
+    [...]
+  }
+}
+</code></pre>
+<p>Now, the name of each test should make explicit what scenario we're testing. This way, we know what's supposed to happen. For example:</p>
+<pre><code class="language-C#">[Fact]
+public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+  [...]
+}
+
+[Fact]
+public async Task WhenTrackerIsSharedWithPermissionCommand_ReturnsCommands()
+{
+  [...]
+}
+</code></pre>
+<blockquote>
+<p>These naming suggestions come from the Microsoft Documentation linked earlier.</p>
+</blockquote>
+<p>With all that, we'll have tests much more organized in the Test Explorer section of Visual Studio.</p>
+<p><img src="https://user-images.githubusercontent.com/32579593/152410114-32a588a7-90b0-4de4-990f-80b04488e58e.png" alt="image" /></p>
+<h2 id="scenario-builder"><a class="header" href="#scenario-builder">Scenario Builder</a></h2>
+<p>When we're creating a test, we should use a Scenario Builder to design an environment that will make it possible to see if everything is working properly.</p>
+<p>It must have methods that help us personalize this environment, such as these examples:</p>
+<pre><code class="language-C#">var builder = new ScenarioBuilder()
+    .AddUser(u =&gt; u.PartnerId = Guid.NewGuid())
+    .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+    .AddAuthorization();
+</code></pre>
+<p>It'll be useful if many of these methods have as an optional parameter a function that lets us configure more specifically the things we'll need to test. It's important to always make the data explict.</p>
+<pre><code class="language-C#">[Fact]
+public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+    var builder = new ScenarioBuilder()
+        .AddUser()
+        .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+        .AddUser()
+        .ShareLastTrackerWithUser(s =&gt; s.PermissionCommand = false)
+        .AddAuthorization();
+
+    [...]
+}
+
+[Fact]
+public async Task WhenTrackerIsSharedWithPermissionCommand_ReturnsCommands()
+{
+    var builder = new ScenarioBuilder()
+        .AddUser()
+        .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+        .AddUser()
+        .ShareLastTrackerWithUser(s =&gt; s.PermissionCommand = true)
+        .AddAuthorization();
+
+    [...]
+}
+</code></pre>
+<blockquote>
+<p>Notice that in the method <code>ShareLastTrackerWithUser()</code>, we're making explicit what we want to test: the PermissionCommand property.</p>
+</blockquote>
+<h2 id="the-test"><a class="header" href="#the-test">The Test</a></h2>
+<p>For the testing, we use the testing tool xUnit, which provides us the <code>Assert</code> functions we use to verify the response of the API call we're testing.</p>
+<pre><code class="language-C#">public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+    [...]
+
+    using (var scenario = await builder.BuildAsync())
+    {
+        var response = await scenario.HttpClient
+            .GetAsync($&quot;trackers/{scenario.Tracker.TrackerId}/commands&quot;);
+
+        Assert.Equal(404, (int)response.StatusCode);
+    }
+}
+</code></pre>
+<blockquote>
+<p>Notice that we built the scenario we designed earlier and used it to test.</p>
+</blockquote>
+<p>In the case of this test, we expected it to return an error 404, so we used the <code>Assert.Equal()</code> to verify if we received exactly what we wanted.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="redux-and-data-management"><a class="header" href="#redux-and-data-management">Redux and Data Management</a></h1>
+<h2 id="introduction-2"><a class="header" href="#introduction-2">Introduction</a></h2>
+<p>The goal of this documentation is to help you understand how to handle database information on Front-End. We'll mainly talk about <a href="https://redux.js.org/introduction/getting-started">Redux</a>, what it is, and good practices when using it.</p>
+<p>To exemplify we'll use some aspects of the <a href="https://github.com/mobiltracker/admin-vanescola">Admin VanEscola</a> implementation.</p>
+<h2 id="conceptual-basis"><a class="header" href="#conceptual-basis">Conceptual Basis</a></h2>
+<p>Imagine we have a set of data that is used in various parts of the application. We wouldn't want each page could modify this data arbitrarily because it could lead to hard-to-reproduce bugs.</p>
+<p>That's why we use Redux. It is a library used to separate the data management logic from the screen logic. With it, to change something in our data, we need to dispatch an <strong>Action</strong> that will handle it and specify what happened.</p>
+<p>We can think of <strong>Actions</strong> as a way to help us understand what's going on in the app. When something changes, we know why and where it changed.</p>
+<p>Having our data as states and the actions to modify them, we also need a function called <strong>Reducer</strong>. It takes a state and an action as arguments and returns the next state of the application.</p>
+<h3 id="react-redux"><a class="header" href="#react-redux">React-Redux</a></h3>
+<p>For compatibility reasons, we use in our projects the <a href="https://react-redux.js.org/introduction/getting-started">React-Redux</a> library. It gives us useful hooks to get the data (<code>useSelector</code>) and dispatch actions (<code>useDispatch</code>). For more informations on the differences bewtween Redux and React-Redux you can read the documentation linked above.</p>
+<p>The usage of these hooks and the actions and reducers will be more detailed in the following tutorial session.</p>
+<h2 id="implementation-tutorial"><a class="header" href="#implementation-tutorial">Implementation Tutorial</a></h2>
+<p>As said before, we'll use the implementation in <a href="https://github.com/mobiltracker/admin-vanescola">Admin VanEscola</a> as an example. We start by coding the roducer.</p>
+<h3 id="reducer"><a class="header" href="#reducer">Reducer</a></h3>
+<p>A reducer is a function that receives a state and an action and transforms it in another state. It has an initial state and uses the action type to decide what it needs to do.</p>
+<p>The way we type the state helps us with the data management.</p>
+<pre><code class="language-javascript">export type ParentsState =
+  | { tag: &quot;UNLOADED&quot; }
+  | { tag: &quot;LOADING&quot; }
+  | { tag: &quot;ERROR&quot; }
+  | {
+      tag: &quot;LOADED&quot;,
+      parents: Parent[],
+    };
+</code></pre>
+<blockquote>
+<p>The tags &quot;UNLOADED&quot;, &quot;LOADING&quot; and &quot;ERROR&quot; can be easily treated in the component and we can be assured that the data we want is loaded and without errors.</p>
+</blockquote>
+<p>Using this typing we have two different scenarios. One where the data isn't ready – either because it's loading or because an error occured with the get API request – and another where it is and can be modified.</p>
+<p>In our reducer, we'll treat those scenarios in two separate <code>switch</code>. The initial state will be &quot;UNLOADED&quot;. Then, after the GET API Request, it can result in an error or success. The state returned by the first switch wil make it clear.</p>
+<pre><code class="language-javascript">export default function parents(
+  state: ParentsState = initialState,
+  action: ParentsAction
+): ParentsState {
+  if (state.tag !== &quot;LOADED&quot;) {
+    switch (action.type) {
+      case &quot;GET_PARENTS_LOADING&quot;:
+        return { tag: &quot;LOADING&quot; };
+
+      case &quot;GET_PARENTS_ERROR&quot;:
+        return { tag: &quot;ERROR&quot; };
+
+      case &quot;GET_PARENTS_OK&quot;:
+        return { tag: &quot;LOADED&quot;, parents: action.data };
+
+      default:
+        return state;
+    }
+  }
+
+  [...]
+</code></pre>
+<p>The second switch can assume that the data is loaded and ready to be manipulated, so it has actions like PUT and DELETE. It returns the already loaded state, with the modifications made within the application.</p>
+<pre><code class="language-javascript">  [...]
+
+  switch (action.type) {
+    case &quot;PUT_PARENT&quot;:
+      return {
+        ...state,
+        parents: state.parents
+          .filter((p) =&gt; p.userId !== action.data.userId)
+          .concat(action.data),
+      };
+
+    case &quot;DELETE_PARENT&quot;:
+      return {
+        ...state,
+        parents: state.parents.filter((p) =&gt; p.userId !== action.data),
+      };
+
+    default:
+      return state;
+  }
+}
+</code></pre>
+<blockquote>
+<p>Notice that every reducer receives all of the page messages (<code>GET_SCHOOLS</code>, <code>PUT_STUDENTS</code>, etc), these actions shouldn't modify the state of this reducer, so we need a <code>default</code> that returns the current state.</p>
+</blockquote>
+<h3 id="action"><a class="header" href="#action">Action</a></h3>
+<p>You can think of an action as an event that describes something that happens in our application. It always has a type property, which makes it clear what's going on, and it may have a data property.</p>
+<p>We use them specially to enclose our API calls, and we define a type that has each of our routes or events.</p>
+<pre><code class="language-javascript">export type ParentsAction =
+  | { type: &quot;GET_PARENTS_ERROR&quot; }
+  | { type: &quot;GET_PARENTS_LOADING&quot; }
+  | { type: &quot;GET_PARENTS_OK&quot;, data: Parent[] }
+  | { type: &quot;PUT_PARENT&quot;, data: Parent }
+  | { type: &quot;DELETE_PARENT&quot;, data: string };
+</code></pre>
+<blockquote>
+<p>Notice that the type makes explict what is happening in the application.</p>
+</blockquote>
+<p>We then define functions that will make the api requests and <strong>dispatch</strong> one of the action types. The dispatch is used to trigger the reducer.</p>
+<p>The get <em>something</em> action is one of the most common, it is used to request the data from the API. When it starts, it makes a dispatch to modify the state to &quot;LOADING&quot;. After the request is finished, it makes another dispatch that will depend if everything went right.</p>
+<pre><code class="language-javascript">export function getParentsAction(): ThunkAction&lt;Promise&lt;void&gt;&gt; {
+  return async (dispatch) =&gt; {
+    dispatch({ type: &quot;GET_PARENTS_LOADING&quot; });
+    try {
+      const response = await apiRequest&lt;any[]&gt;({ url: &quot;owner/parents&quot; });
+      const data = normalizeParents(response.data);
+      dispatch({ type: &quot;GET_PARENTS_OK&quot;, data: data });
+    } catch {
+      dispatch({ type: &quot;GET_PARENTS_ERROR&quot; });
+    }
+  };
+}
+</code></pre>
+<blockquote>
+<p>We use ThunkAction as a way to turn dispatch into an async function.</p>
+</blockquote>
+<p>We also have the actions that deal with PUT, POST and DELETE API Requests. It is similar to the GET action because it also waits for an API request and then makes a dispatch.</p>
+<p>The main differences are: it will modify something in the data that is already loaded, so we don't have to dispatch the loading; and it usually has a return that indicates if it was succesful or not. This way the components can deal with errors.</p>
+<pre><code class="language-javascript">export function putParentAction(
+  name: string,
+  phoneNumber: string,
+  parentId: string
+): ThunkAction&lt;Promise&lt;Result&gt;&gt; {
+  return async (dispatch, getState) =&gt; {
+    const parentsState = getState().parents;
+
+    if (parentsState.tag !== &quot;LOADED&quot;) return err({});
+
+    const editedParent = parentsState.parents.find(
+      (p) =&gt; p.userId === parentId
+    );
+
+    if (!editedParent) return err({});
+
+    editedParent.name = name;
+    editedParent.phoneNumber = phoneNumber;
+
+    try {
+      await apiRequest({
+        url: `owner/parent/${parentId}`,
+        method: &quot;PUT&quot;,
+        data: {
+          name,
+          phoneNumber,
+        },
+      });
+
+      dispatch({ type: &quot;PUT_PARENT&quot;, data: editedParent });
+
+      return ok({});
+    } catch {
+      return err({});
+    }
+  };
+}
+</code></pre>
+<blockquote>
+<p>Notice that with <code>ThunkAction</code> we can use <code>getState()</code> to access the current state.</p>
+</blockquote>
+<h3 id="store"><a class="header" href="#store">Store</a></h3>
+<p>The store is the combined state of all reducers and we use the <code>useSelector()</code> hook to access the specific state that we need.</p>
+<pre><code class="language-javascript">const studentsState = useSelector(selectStudentsState);
+const parentsState = useSelector(selectParentsState);
+const schoolsState = useSelector(selectSchools);
+</code></pre>
+<p><code>selectParentsState()</code> is a simple function to return the state from the store.</p>
+<pre><code class="language-javascript">export const selectParentsState = (store: StoreState) =&gt; store.parents;
+</code></pre>
+<p>Since we have the tags in the state, after getting it with the <code>useSelector()</code>, it`s easy to treat loading states and error states.</p>
+<p>The store is configured in the <code>configureStore.ts</code> file. and then we can go to <code>index.tsx</code> and have the <code>Provider</code> as the outermost component. This way the store is accessable in the entire application.</p>
+<pre><code class="language-javascript">ReactDOM.render(
+  &lt;Provider store={store}&gt;
+    &lt;PersistGate loading={null} persistor={persistor}&gt;
+      &lt;App /&gt;
+    &lt;/PersistGate&gt;
+  &lt;/Provider&gt;,
+  document.getElementById(&quot;root&quot;)
+);
+</code></pre>
+<h3 id="implementing-it-in-the-page"><a class="header" href="#implementing-it-in-the-page">Implementing it in the page</a></h3>
+<p>If everything is configured appropriately, using the data in a screen or component should be easy. We only have to follow a few steps. Notice that the following component is a simplified version to ilustrate.</p>
+<p>First, we use the <code>useSelector()</code> hook to get the current state of the data we need.</p>
+<pre><code class="language-javascript">export function ParentsScreen() {
+  const parentsState = useSelector(selectParentsState);
+  const studentsState = useSelector(selectStudentsState)
+
+  [...]
+</code></pre>
+<p>Then, we must verify if the state is in loading or in error and treat it accordingly.</p>
+<p>Sometimes we need to access more than a single state and the validations must be done to each one of them.</p>
+<pre><code class="language-javascript">  [...]
+
+  if (isParentsLoading(parentsState) || isStudentsLoading(studentsState))
+    return &lt;div className=&quot;alert alert-info&quot;&gt;Carregando...&lt;/div&gt;;
+
+  if (
+    parentsState.tag === &quot;ERROR&quot; ||
+    studentsState.tag === &quot;ERROR&quot;
+  )
+    return (
+      &lt;div className=&quot;alert alert-info&quot;&gt;
+        Ocorreu um erro, por favor tente novamente mais tarde.
+      &lt;/div&gt;
+    );
+
+  [...]
+</code></pre>
+<p>After that, we can be assured that the data is loaded and without errors and start using it.</p>
+<pre><code class="language-javascript">  [...]
+
+  const students = studentsState.students;
+  const parents = parentsState.parents;
+
+  return (
+    &lt;div&gt;
+      &lt;ParentComponent parents={parents} students={students}&gt;&lt;/ParentComponent&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>The <code>useDispatch()</code> hook is used to call an action, for example in the <code>onClick</code> of the save button of a form.</p>
+<pre><code class="language-javascript">const dispatch = useDispatch()
+
+[...]
+
+&lt;button
+  onClick={async () =&gt; {
+    const resp = await dispatch(
+      putParentAction(currentName, currentPhone, myself.userId)
+    );
+    setSuccess(resp.success ? &quot;success&quot; : &quot;error&quot;);
+  }}
+&gt;
+  Salvar
+&lt;/button&gt;
+</code></pre>
+<p>The return of the action is used to verify if everything went right or not and treat it properly.</p>
+<h2 id="data-fetching-and-cache-maintenance"><a class="header" href="#data-fetching-and-cache-maintenance">Data Fetching and Cache Maintenance</a></h2>
+<p>Ainda não temos um exemplo de boa implementação de &quot;data fetching and cache maintenance&quot;, mas para fins didáticos o admin VanEscola funciona da seguinte maneira:</p>
+<p>We don't have an example of good implementation for data fetching and cache maintenance. But, for didactic purposes, this is how we do it in VanEscola Admin: when the user logs in, <strong>everything</strong> is loaded.</p>
+<pre><code class="language-javascript">function Main() {
+  const isAuthenticated = useSelector&lt;StoreState, unknown&gt;(
+    (s) =&gt; s.login.authenticated
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() =&gt; {
+    if (isAuthenticated) {
+      dispatch(getStudentsAction());
+      dispatch(getSchoolsAction());
+      dispatch(getParentsAction());
+      dispatch(getProfileAction());
+    }
+  }, [isAuthenticated, dispatch]);
+
+  [...]
+}
+</code></pre>
+<p>We also have a throttle to avoid receiving too many requests at the same time.</p>
+<pre><code class="language-javascript">export function refreshStateAction(): ThunkAction&lt;Promise&lt;void&gt;&gt; {
+  const time = Date.now();
+  const diff = time - lastTime;
+
+  if (diff &lt; throttleTimeout) {
+    return () =&gt; Promise.resolve();
+  } else {
+    lastTime = time;
+    return async (dispatch) =&gt; {
+      dispatch(getParentsAction());
+      dispatch(getStudentsAction());
+      dispatch(getSchoolsAction());
+    };
+  }
+}
+</code></pre>
+<p>Usually, when we make a <code>post</code>, <code>put</code> or <code>delete</code> request, we also call a <code>get</code> in order to update the data in the state. But sometimes we can update manually in the reducer.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="things"><a class="header" href="#things">Things</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Best Practices for Writing Tests - Mobiltracker MdBook</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html" class="active"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="things.html"><strong aria-hidden="true">3.</strong> Things</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Mobiltracker MdBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="best-practices-for-writing-tests"><a class="header" href="#best-practices-for-writing-tests">Best Practices for Writing Tests</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In this documentation, we'll talk about good habits for when you're coding a test.</p>
+<p>Another good source to know the best practices is the <a href="https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices">Microsoft Documentation for writing Unit Tests</a>. We can also use many of those tips when writing Integration Tests.</p>
+<h3 id="example-file"><a class="header" href="#example-file">Example File</a></h3>
+<p>This issue is part of an idea to have a catalog of examples of good code. The example chosen in this case is the <a href="https://github.com/mobiltracker/mobiltracker/blob/master/Mobiltracker/Mobiltracker.Api.Core.Tests/Controllers/Commands.cs">Commands Controller tests</a> in Mobiltracker API.</p>
+<h2 id="test-driven-development"><a class="header" href="#test-driven-development">Test Driven Development</a></h2>
+<p>We follow the Test Driven Development (TDD), a software development technique in which we write the test first, watch it as it breaks, and then implement the functions necessary to solve our problems. This way, we can help to avoid a false positive.</p>
+<p>Another good practice is to begin by testing the errors we know are most likely to happen. Then, by leaving the successful test for last, we can be more confident that we have a code that is more robust and less susceptible to failure.</p>
+<h2 id="naming-and-organizing"><a class="header" href="#naming-and-organizing">Naming and Organizing</a></h2>
+<p>When we're writing API Integration Tests, it's good to keep them organized so they'll be easier to maintain. A good way to do it is by having a folder called Controllers and dividing the tests for each controller in a different file. Such as this example:</p>
+<p><img src="https://user-images.githubusercontent.com/32579593/152409291-6f762769-d5d8-4dc8-9a61-7ef437f2fb26.png" alt="image" /></p>
+<p>Inside the file, the namespace must be the name of the controller. And each of the possible routes should be divided into a different class.</p>
+<pre><code class="language-C#">namespace CommandsController
+{
+  public class GET_TrackerCommands
+  {
+    [...]
+  }
+
+  public class GET_CommandPatterns
+  {
+    [...]
+  }
+
+  public class POST_CommandRequest
+  {
+    [...]
+  }
+}
+</code></pre>
+<p>Now, the name of each test should make explicit what scenario we're testing. This way, we know what's supposed to happen. For example:</p>
+<pre><code class="language-C#">[Fact]
+public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+  [...]
+}
+
+[Fact]
+public async Task WhenTrackerIsSharedWithPermissionCommand_ReturnsCommands()
+{
+  [...]
+}
+</code></pre>
+<blockquote>
+<p>These naming suggestions come from the Microsoft Documentation linked earlier.</p>
+</blockquote>
+<p>With all that, we'll have tests much more organized in the Test Explorer section of Visual Studio.</p>
+<p><img src="https://user-images.githubusercontent.com/32579593/152410114-32a588a7-90b0-4de4-990f-80b04488e58e.png" alt="image" /></p>
+<h2 id="scenario-builder"><a class="header" href="#scenario-builder">Scenario Builder</a></h2>
+<p>When we're creating a test, we should use a Scenario Builder to design an environment that will make it possible to see if everything is working properly.</p>
+<p>It must have methods that help us personalize this environment, such as these examples:</p>
+<pre><code class="language-C#">var builder = new ScenarioBuilder()
+    .AddUser(u =&gt; u.PartnerId = Guid.NewGuid())
+    .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+    .AddAuthorization();
+</code></pre>
+<p>It'll be useful if many of these methods have as an optional parameter a function that lets us configure more specifically the things we'll need to test. It's important to always make the data explict.</p>
+<pre><code class="language-C#">[Fact]
+public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+    var builder = new ScenarioBuilder()
+        .AddUser()
+        .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+        .AddUser()
+        .ShareLastTrackerWithUser(s =&gt; s.PermissionCommand = false)
+        .AddAuthorization();
+
+    [...]
+}
+
+[Fact]
+public async Task WhenTrackerIsSharedWithPermissionCommand_ReturnsCommands()
+{
+    var builder = new ScenarioBuilder()
+        .AddUser()
+        .AddTracker(t =&gt; { t.TrackerClassId = 1; })
+        .AddUser()
+        .ShareLastTrackerWithUser(s =&gt; s.PermissionCommand = true)
+        .AddAuthorization();
+
+    [...]
+}
+</code></pre>
+<blockquote>
+<p>Notice that in the method <code>ShareLastTrackerWithUser()</code>, we're making explicit what we want to test: the PermissionCommand property.</p>
+</blockquote>
+<h2 id="the-test"><a class="header" href="#the-test">The Test</a></h2>
+<p>For the testing, we use the testing tool xUnit, which provides us the <code>Assert</code> functions we use to verify the response of the API call we're testing.</p>
+<pre><code class="language-C#">public async Task WhenTrackerIsSharedWithNoPermissionCommand_Returns404()
+{
+    [...]
+
+    using (var scenario = await builder.BuildAsync())
+    {
+        var response = await scenario.HttpClient
+            .GetAsync($&quot;trackers/{scenario.Tracker.TrackerId}/commands&quot;);
+
+        Assert.Equal(404, (int)response.StatusCode);
+    }
+}
+</code></pre>
+<blockquote>
+<p>Notice that we built the scenario we designed earlier and used it to test.</p>
+</blockquote>
+<p>In the case of this test, we expected it to return an error 404, so we used the <code>Assert.Equal()</code> to verify if we received exactly what we wanted.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="redux.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="redux.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
