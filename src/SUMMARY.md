@@ -6,4 +6,3 @@
 
 - [Best Practices for Writing Tests](./api-tests.md)
 - [Redux and Data Management](./redux.md)
-- [Things](./things.md)
