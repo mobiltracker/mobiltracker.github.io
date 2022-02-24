@@ -64,4 +64,4 @@ This code example renders the following summary:
 
 ![Example Summary](https://user-images.githubusercontent.com/32579593/155591366-06ee7e70-f386-442e-87f6-47e5aa58ac82.png)
 
-For more informations you can read the [documentation](https://rust-lang.github.io/mdBook/format/summary.html)
+For more informations you can read the [documentation](https://rust-lang.github.io/mdBook/format/summary.html).
