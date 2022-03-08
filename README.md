@@ -1,5 +1,7 @@
 # Guide
 
+> The latest version of this book is published automatically at https://mobiltracker.github.io
+
 MbBook is a tool to easily create Markdown books. In this guide we'll explain how to add and edit files to Mobiltracker's MdBook. For a more in-depth explanation of MdBook and all of its features you can read the [official documentation](https://rust-lang.github.io/mdBook/).
 
 ## Installing MdBook
