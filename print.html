@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -513,6 +513,25 @@ const schoolsState = useSelector(selectSchools);
 }
 </code></pre>
 <p>Usually, when we make a <code>post</code>, <code>put</code> or <code>delete</code> request, we also call a <code>get</code> in order to update the data in the state. But sometimes we can update manually in the reducer.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="repositories"><a class="header" href="#repositories">Repositories</a></h1>
+<h2 id="introduction-3"><a class="header" href="#introduction-3">Introduction</a></h2>
+<p>The goal of this documentation is to help you create and manage our git repositories.</p>
+<blockquote>
+<p>This page is still a work in progress. We can list the missing topics here:</p>
+<ul>
+<li><del>naming</del></li>
+<li>monorepo vs multi-repo</li>
+</ul>
+</blockquote>
+<h2 id="repository-naming"><a class="header" href="#repository-naming">Repository naming</a></h2>
+<p>The preferred format is <code>[domain/sytem]</code>-<code>[type]</code>-<code>[complement, optional]</code>.
+Examples:</p>
+<ul>
+<li>mobiltracker-app-monitor: <code>[mobiltracker]</code>-<code>[app]</code>-<code>[monitor]</code></li>
+<li>vanescola-app-pais: : <code>[vanescola]</code>-<code>[app]</code>-<code>[pais]</code></li>
+<li>vanescola-api: <code>[vanescola]</code>-<code>[api]</code>-<code>[]</code> (no complement)</li>
+<li>vanescola-registration-form: <code>[vanescola]</code>-<code>[registration-form]</code>-<code>[]</code> (no complement)</li>
+</ul>
 
                     </main>
 
