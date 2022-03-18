@@ -12,7 +12,7 @@ It's recommendable to add the path to the file to your `PATH` environment variab
 
 ## Read the book locally
 
-After cloning this repository, you can use the command `mbook serve` in the root of the directory to open a local server. By default it opens in `localhost:3000`.
+After cloning this repository, you can use the command `mdbook serve` in the root of the directory to open a local server. By default it opens in `localhost:3000`.
 
 This server rebuilds the book automatically after you modify and save any file in the `./src` folder.
 
