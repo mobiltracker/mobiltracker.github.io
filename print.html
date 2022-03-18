@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">4.</strong> Utils</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -532,6 +532,43 @@ Examples:</p>
 <li>vanescola-api: <code>[vanescola]</code>-<code>[api]</code>-<code>[]</code> (no complement)</li>
 <li>vanescola-registration-form: <code>[vanescola]</code>-<code>[registration-form]</code>-<code>[]</code> (no complement)</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="utils"><a class="header" href="#utils">Utils</a></h1>
+<h2 id="introduction-4"><a class="header" href="#introduction-4">Introduction</a></h2>
+<p>The goal of this documentation is to set a standard for <code>utils</code> in our projects.</p>
+<h2 id="where-to-find-them"><a class="header" href="#where-to-find-them">Where to find them</a></h2>
+<p><code>utils</code> must be located inside a folder called <code>src/utils</code>. See an <a href="https://github.com/mobiltracker/mobiltracker-partner/tree/master/Mobiltracker.Partner.Web.Core/client/src/utils">example</a>.</p>
+<h2 id="common-utils"><a class="header" href="#common-utils">Common Utils</a></h2>
+<ul>
+<li><a href="utils.html#phone-number-formatter">Phone number formatter</a></li>
+<li><a href="utils.html#cpf-cpnj-formatter">CPF-CNPJ formatter</a></li>
+</ul>
+<h3 id="phone-number-formatter"><a class="header" href="#phone-number-formatter">Phone number formatter</a></h3>
+<pre><code class="language-Typescript">const formatPhoneNumber = (input: string) =&gt; {
+  let cleaned = input.replace(/\D/g, &quot;&quot;);
+  let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+
+  if (match) {
+    return &quot;(&quot; + match[1] + &quot;) &quot; + match[2] + &quot;-&quot; + match[3];
+  } else {
+    return cleaned;
+  }
+};
+</code></pre>
+<h3 id="cpf-cpnj-formatter"><a class="header" href="#cpf-cpnj-formatter">CPF-CPNJ formatter</a></h3>
+<pre><code class="language-Typescript">const formatCpfCnpj = (input: string) =&gt; {
+  let cleaned = input.replace(/\D/g, &quot;&quot;);
+  let cpfMatch = cleaned.match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/);
+  let cnpjMatch = cleaned.match(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/);
+
+  if (cpfMatch) {
+    return `${cpfMatch[1]}.${cpfMatch[2]}.${cpfMatch[3]}-${cpfMatch[4]}`;
+  } else if (cnpjMatch) {
+    return `${cnpjMatch[1]}.${cnpjMatch[2]}.${cnpjMatch[3]}/${cnpjMatch[4]}-${cnpjMatch[5]}`;
+  } else {
+    return cleaned;
+  }
+};
+</code></pre>
 
                     </main>
 

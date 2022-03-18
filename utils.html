@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Repositores - Mobiltracker MdBook</title>
+        <title>Utils - Mobiltracker MdBook</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html" class="active"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">4.</strong> Utils</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="utils.html" class="active"><strong aria-hidden="true">4.</strong> Utils</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,35 +134,50 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="repositories"><a class="header" href="#repositories">Repositories</a></h1>
+                        <h1 id="utils"><a class="header" href="#utils">Utils</a></h1>
 <h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
-<p>The goal of this documentation is to help you create and manage our git repositories.</p>
-<blockquote>
-<p>This page is still a work in progress. We can list the missing topics here:</p>
+<p>The goal of this documentation is to set a standard for <code>utils</code> in our projects.</p>
+<h2 id="where-to-find-them"><a class="header" href="#where-to-find-them">Where to find them</a></h2>
+<p><code>utils</code> must be located inside a folder called <code>src/utils</code>. See an <a href="https://github.com/mobiltracker/mobiltracker-partner/tree/master/Mobiltracker.Partner.Web.Core/client/src/utils">example</a>.</p>
+<h2 id="common-utils"><a class="header" href="#common-utils">Common Utils</a></h2>
 <ul>
-<li><del>naming</del></li>
-<li>monorepo vs multi-repo</li>
+<li><a href="#phone-number-formatter">Phone number formatter</a></li>
+<li><a href="#cpf-cpnj-formatter">CPF-CNPJ formatter</a></li>
 </ul>
-</blockquote>
-<h2 id="repository-naming"><a class="header" href="#repository-naming">Repository naming</a></h2>
-<p>The preferred format is <code>[domain/sytem]</code>-<code>[type]</code>-<code>[complement, optional]</code>.
-Examples:</p>
-<ul>
-<li>mobiltracker-app-monitor: <code>[mobiltracker]</code>-<code>[app]</code>-<code>[monitor]</code></li>
-<li>vanescola-app-pais: : <code>[vanescola]</code>-<code>[app]</code>-<code>[pais]</code></li>
-<li>vanescola-api: <code>[vanescola]</code>-<code>[api]</code>-<code>[]</code> (no complement)</li>
-<li>vanescola-registration-form: <code>[vanescola]</code>-<code>[registration-form]</code>-<code>[]</code> (no complement)</li>
-</ul>
+<h3 id="phone-number-formatter"><a class="header" href="#phone-number-formatter">Phone number formatter</a></h3>
+<pre><code class="language-Typescript">const formatPhoneNumber = (input: string) =&gt; {
+  let cleaned = input.replace(/\D/g, &quot;&quot;);
+  let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+
+  if (match) {
+    return &quot;(&quot; + match[1] + &quot;) &quot; + match[2] + &quot;-&quot; + match[3];
+  } else {
+    return cleaned;
+  }
+};
+</code></pre>
+<h3 id="cpf-cpnj-formatter"><a class="header" href="#cpf-cpnj-formatter">CPF-CPNJ formatter</a></h3>
+<pre><code class="language-Typescript">const formatCpfCnpj = (input: string) =&gt; {
+  let cleaned = input.replace(/\D/g, &quot;&quot;);
+  let cpfMatch = cleaned.match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/);
+  let cnpjMatch = cleaned.match(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/);
+
+  if (cpfMatch) {
+    return `${cpfMatch[1]}.${cpfMatch[2]}.${cpfMatch[3]}-${cpfMatch[4]}`;
+  } else if (cnpjMatch) {
+    return `${cnpjMatch[1]}.${cnpjMatch[2]}.${cnpjMatch[3]}/${cnpjMatch[4]}-${cnpjMatch[5]}`;
+  } else {
+    return cleaned;
+  }
+};
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="redux.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="repositories.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a rel="next" href="utils.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -170,11 +185,8 @@ Examples:</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="redux.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="repositories.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a rel="next" href="utils.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
