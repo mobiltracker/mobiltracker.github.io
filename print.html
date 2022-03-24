@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">4.</strong> Utils</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -532,6 +532,24 @@ Examples:</p>
 <li>vanescola-api: <code>[vanescola]</code>-<code>[api]</code>-<code>[]</code> (no complement)</li>
 <li>vanescola-registration-form: <code>[vanescola]</code>-<code>[registration-form]</code>-<code>[]</code> (no complement)</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="responsive-tables"><a class="header" href="#responsive-tables">Responsive tables</a></h1>
+<p>See: https://medium.com/appnroll-publication/5-practical-solutions-to-make-responsive-data-tables-ff031c48b122</p>
+<h2 id="types-of-reponsive-tables"><a class="header" href="#types-of-reponsive-tables">Types of reponsive tables</a></h2>
+<p>Shorten
+: remove unnecessary columns and keep the table concise by leaving the crucial data only</p>
+<p>Moveable
+: use swipe gestures to scroll through the whole table horizontally</p>
+<p>Collapsed
+: columns are navigated using swipe gestures, the primary column (legend) is fixed.</p>
+<p>Transformed
+: collapse table rows into separate cards.</p>
+<h2 id="guidelines"><a class="header" href="#guidelines">Guidelines</a></h2>
+<p>We are only using Shorten and Moveable types, because they are easy to develop.</p>
+<p>Apply the following decisions from top to bottom:</p>
+<ol>
+<li>Use a 3 column &quot;shorten&quot; table, unless it not possible.</li>
+<li>Use &quot;moveable&quot;</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="utils"><a class="header" href="#utils">Utils</a></h1>
 <h2 id="introduction-4"><a class="header" href="#introduction-4">Introduction</a></h2>
 <p>The goal of this documentation is to set a standard for <code>utils</code> in our projects.</p>
