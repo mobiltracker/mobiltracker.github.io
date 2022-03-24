@@ -1,5 +1,7 @@
 # Responsive tables
 
+> TODO: examples
+
 See: https://medium.com/appnroll-publication/5-practical-solutions-to-make-responsive-data-tables-ff031c48b122
 
 ## Types of reponsive tables
