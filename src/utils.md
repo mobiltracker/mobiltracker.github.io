@@ -12,6 +12,7 @@ The goal of this documentation is to set a standard for `utils` in our projects.
 
 - [Phone number formatter](#phone-number-formatter)
 - [CPF-CNPJ formatter](#cpf-cpnj-formatter)
+- [Email Validator](#email-validator)
 
 ### Phone number formatter
 
@@ -43,5 +44,13 @@ const formatCpfCnpj = (input: string) => {
   } else {
     return cleaned;
   }
+};
+```
+
+### Email Validator
+
+```Typescript
+function validateEmail(value: string) {
+  return /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/.test(value);
 };
 ```
