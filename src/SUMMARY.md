@@ -9,3 +9,4 @@
 - [Repositores](./repositories.md)
 - [Responsive tables](./responsive-tables.md)
 - [Utils](./utils.md)
+- [How to Safely Migrate a SQL Table](./migrate-sql-table.md)
