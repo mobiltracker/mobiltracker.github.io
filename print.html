@@ -562,6 +562,7 @@ Examples:</p>
 <ul>
 <li><a href="utils.html#phone-number-formatter">Phone number formatter</a></li>
 <li><a href="utils.html#cpf-cpnj-formatter">CPF-CNPJ formatter</a></li>
+<li><a href="utils.html#email-validator">Email Validator</a></li>
 </ul>
 <h3 id="phone-number-formatter"><a class="header" href="#phone-number-formatter">Phone number formatter</a></h3>
 <pre><code class="language-Typescript">const formatPhoneNumber = (input: string) =&gt; {
@@ -588,6 +589,11 @@ Examples:</p>
   } else {
     return cleaned;
   }
+};
+</code></pre>
+<h3 id="email-validator"><a class="header" href="#email-validator">Email Validator</a></h3>
+<pre><code class="language-Typescript">function validateEmail(value: string) {
+  return /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/.test(value);
 };
 </code></pre>
 
