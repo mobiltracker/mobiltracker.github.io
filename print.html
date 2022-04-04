@@ -600,66 +600,324 @@ Examples:</p>
 <h2 id="introduction-5"><a class="header" href="#introduction-5">Introduction</a></h2>
 <p>This documentation will show how to safely migrate a SQL Table. As an example we'll use the migration of the Routes table to RoutesTemplates.</p>
 <h2 id="step-by-step"><a class="header" href="#step-by-step">Step by Step</a></h2>
-<ol>
-<li>Create a new table.</li>
-<li>Create a trigger in the old table to replicate the new inserts to the new table. See an example:</li>
-</ol>
-<pre><code class="language-sql">DROP TRIGGER replicationTrigger;
-GO
-
-CREATE TRIGGER replicationTrigger ON routes
-FOR INSERT
-AS
-
--- Allows the creation of a custom RouteTemplateId
-SET IDENTITY_INSERT Route_RouteTemplates ON
-
-INSERT INTO Route_RouteTemplates
-(RouteTemplateId, Name, VanId, SchedulerTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun)
-SELECT
-RouteId, Name, VanId, SchedulerTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun
-FROM inserted
-
-SET IDENTITY_INSERT Route_RouteTemplates OFF
-GO
-</code></pre>
-<ol start="3">
-<li>Migrate the existing data of the old table to the new one, as show bellow:</li>
-</ol>
-<pre><code class="language-sql">set IDENTITY_INSERT Route_RouteTemplates on;
-
-INSERT INTO Route_RouteTemplates
-(RouteTemplateId, [Name], VanId, SchedulerTime, mon, tue, wed, thu, fri, sat, sun)
-SELECT
-r.RouteId, r.Name, r.VanId, r.SchedulerTime, r.Mon, r.Tue, r.Wed, r.Thu, r.Fri, r.Sat, r.Sun
-FROM Routes as R
-LEFT JOIN RouteRouteTemplates as rt on r.RouteId = rt.RouteTemplateId
-where rt.RouteTemplateId is null; -- filter columns that already are on the new table
-
-# set IDENTITY_INSERT Route_RouteTemplates off;
-</code></pre>
-<ol start="4">
-<li>
-<p>Migrate the readings of the old table to the new one (API calls, scripts)</p>
+<h4 id="setup-inicial"><a class="header" href="#setup-inicial">Setup inicial</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Crie uma issue no repositório do mobiltracker-data para a migração da tabela</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Copie esse tutorial no corpo da issue</li>
+<li><input disabled="" type="checkbox"/>
+Atualize o checklist conforme for progredindo com a migração</li>
+</ul>
 </li>
-<li>
-<p>Migrate the writings of the old table to the new one (API calls, scripts)</p>
+<li><input disabled="" type="checkbox"/>
+<p>Crie a nova tabela</p>
 </li>
-</ol>
+</ul>
+<h4 id="setup-de-triggers"><a class="header" href="#setup-de-triggers">Setup de triggers</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Crie triggers que mantenham a nova tabela atualizada com a tabela atual</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Criar trigger que deleta itens da tabela nova</p>
 <blockquote>
-<p>It's very important that the readings migrations happen before, since once the writings migration is done, the old table will be outdated and that can interfere in the readings.</p>
+<p>É importante que o trigger de DELETE venha antes do INSERT para evitar o seguinte cenário:</p>
+<ul>
+<li>INSERT da linha X na tabela antiga e replicada para a tabela nova por trigger</li>
+<li>DELETE da linha X na tabela antiga</li>
+<li><strong>PROBLEMA</strong>: agora a tabela nova tem uma linha que deveria ter sido deletada</li>
+</ul>
 </blockquote>
-<ol start="6">
-<li>
-<p>Migrate the FKs from the old tables to the new one.</p>
+<pre><code class="language-sql">-- Use essa query apenas como referência
+CREATE TRIGGER RoutesToRouteTemplatesReplicationOnDeleteTrigger ON [dbo].[Routes]
+FOR DELETE
+AS
+    -- Remove deleted lines from the new table
+    DELETE FROM Route_RouteTemplates
+    WHERE RouteTemplateId in (SELECT RouteId FROM deleted)
+GO
+</code></pre>
 </li>
-<li>
-<p>Insert a <code>_toBeDeleted</code> in the tables to be deleted.</p>
+<li><input disabled="" type="checkbox"/>
+<p>Criar trigger que atualiza itens da tabela nova</p>
+<blockquote>
+<p>É importante que o trigger de UPDATE venha antes do INSERT para evitar o seguinte cenário:</p>
+<ul>
+<li>INSERT da linha X na tabela antiga e replicada para a tabela nova por trigger</li>
+<li>UPDATE da linha X na tabela antiga</li>
+<li><strong>PROBLEMA</strong>: agora a tabela nova tem uma linha com dados desatualizados</li>
+</ul>
+</blockquote>
+<pre><code class="language-sql">-- Use essa query apenas como referência
+CREATE TRIGGER RoutesToRouteTemplatesReplicationOnUpdateTrigger ON [dbo].[Routes]
+FOR UPDATE
+AS
+    BEGIN TRANSACTION;
+
+    SET NOCOUNT ON;
+
+    DECLARE @RouteId bigint,
+        @Name NVARCHAR(50),
+        @VanId bigint,
+        @SchedulerTime datetime,
+        @Mon bit,
+        @Tue bit,
+        @Wed bit,
+        @Thu bit,
+        @Fri bit,
+        @Sat bit,
+        @Sun bit;
+
+    DECLARE insertedCursor CURSOR FOR
+    SELECT routeid, Name, VanId, SchedulerTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun
+    FROM inserted;
+
+    OPEN insertedCursor
+
+    FETCH NEXT FROM insertedCursor INTO @RouteId, @Name, @VanId, @SchedulerTime, @Mon, @Tue, @Wed, @Thu, @Fri, @Sat, @Sun
+
+    -- Iterate all updated lines
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+
+        UPDATE Route_RouteTemplates
+        set
+            Name = @Name,
+            VanId = @VanId,
+            SchedulerTime = @SchedulerTime,
+            Mon = @Mon,
+            Tue = @Tue,
+            Wed = @Wed,
+            Thu = @Thu,
+            Fri = @Fri,
+            Sat = @Sat,
+            Sun = @Sun
+        where RouteTemplateId = @RouteId
+
+        -- Get next element
+        FETCH NEXT FROM insertedCursor INTO @RouteId, @Name, @VanId, @SchedulerTime, @Mon, @Tue, @Wed, @Thu, @Fri, @Sat, @Sun
+    END
+    CLOSE insertedCursor;
+    DEALLOCATE insertedCursor;
+
+    COMMIT TRANSACTION;
+GO
+</code></pre>
 </li>
-<li>
-<p>After a few weeks, delete de old table.</p>
+<li><input disabled="" type="checkbox"/>
+<p>Crie uma trigger na tabela antiga que replique os novos inserts para a tabela nova</p>
+<pre><code class="language-sql">-- Use essa query apenas como referência
+CREATE TRIGGER RoutesToRouteTemplatesReplicationOnUpdateTrigger ON [dbo].[Routes]
+FOR UPDATE
+AS
+    BEGIN TRANSACTION;
+
+    SET NOCOUNT ON;
+
+    DECLARE @RouteId bigint,
+        @Name NVARCHAR(50),
+        @VanId bigint,
+        @SchedulerTime datetime,
+        @Mon bit,
+        @Tue bit,
+        @Wed bit,
+        @Thu bit,
+        @Fri bit,
+        @Sat bit,
+        @Sun bit;
+
+    DECLARE insertedCursor CURSOR FOR
+    SELECT routeid, Name, VanId, SchedulerTime, Mon, Tue, Wed, Thu, Fri, Sat, Sun
+    FROM inserted;
+
+    OPEN insertedCursor
+
+    FETCH NEXT FROM insertedCursor INTO @RouteId, @Name, @VanId, @SchedulerTime, @Mon, @Tue, @Wed, @Thu, @Fri, @Sat, @Sun
+
+    -- Iterate all updated lines
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+
+        UPDATE Route_RouteTemplates
+        set
+            Name = @Name,
+            VanId = @VanId,
+            SchedulerTime = @SchedulerTime,
+            Mon = @Mon,
+            Tue = @Tue,
+            Wed = @Wed,
+            Thu = @Thu,
+            Fri = @Fri,
+            Sat = @Sat,
+            Sun = @Sun
+        where RouteTemplateId = @RouteId
+
+        -- Get next element
+        FETCH NEXT FROM insertedCursor INTO @RouteId, @Name, @VanId, @SchedulerTime, @Mon, @Tue, @Wed, @Thu, @Fri, @Sat, @Sun
+    END
+    CLOSE insertedCursor;
+    DEALLOCATE insertedCursor;
+
+    COMMIT TRANSACTION;
+GO
+</code></pre>
 </li>
-</ol>
+</ul>
+</li>
+</ul>
+<h4 id="migração-de-dados"><a class="header" href="#migração-de-dados">Migração de dados</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Migre os dados restantes da tabela antiga para a tabela nova</p>
+<blockquote>
+<p>A partir daqui, a tabela nova estará sempre atualizada com a tabela antiga.</p>
+</blockquote>
+<pre><code class="language-sql">-- Use essa query apenas como referência
+set IDENTITY_INSERT Route_RouteTemplates on;
+
+INSERT INTO Route_RouteTemplates
+    (RouteTemplateId, [Name], VanId, SchedulerTime, mon, tue, wed, thu, fri, sat, sun)
+SELECT r.RouteId, r.Name, r.VanId, r.SchedulerTime, r.Mon, r.Tue, r.Wed, r.Thu, r.Fri, r.Sat, r.Sun
+FROM Routes as R
+LEFT JOIN Route_RouteTemplates
+    as rt on r.RouteId = rt.RouteTemplateId
+
+-- filter columns that already are on the new table
+where rt.RouteTemplateId is null;
+
+set IDENTITY_INSERT Route_RouteTemplates off;
+</code></pre>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Migre todas as Foreign Keys que apontam para a tabela antiga para a tabela nova</p>
+</li>
+</ul>
+<h4 id="migração-de-leitura"><a class="header" href="#migração-de-leitura">Migração de leitura</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Migrar as leituras da tabela antiga para a tabela nova</p>
+<blockquote>
+<p>É MUITO IMPORTANTE que as migrações de leitura aconteçam primeiro, para evitar o seguinte cenário:</p>
+<ul>
+<li>UPDATE da linha X na tabela nova</li>
+<li>SELECT da linha X na tabela antiga</li>
+<li><strong>PROBLEMA</strong>: O SELECT retornará um dado desatualizado pois o UPDATE aconteceu apenas na tabela nova.</li>
+</ul>
+</blockquote>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Scripts</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Processadores</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Usos na API</p>
+<blockquote>
+<p>o Entity Framework não permite que a leitura de uma classe seja feito de uma tabela e escrita em outra, por isso a estratégia será criar uma classe nova e substituir a antiga classe por ela</p>
+</blockquote>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Crie uma nova classe a partir da classe antiga</li>
+<li><input disabled="" type="checkbox"/>
+Mapeie no DbContext para a tabela nova</li>
+<li><input disabled="" type="checkbox"/>
+Marque a classe antiga como deprecada</li>
+<li><input disabled="" type="checkbox"/>
+Substitua os usos de leitura pela classe nova</li>
+<li><input disabled="" type="checkbox"/>
+Confirme que todos os testes ainda estão passando</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Confirme que a tabela não está sendo acessada de mais nenhum outro lugar</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Confirme com o resto da equipe se ninguém mais sabe de algum outro lugar onde a tabela é acessada</li>
+<li><input disabled="" type="checkbox"/>
+Acompanhe o uso da tabela
+<pre><code class="language-sql">-- Utilize essa query apenas como referência
+select
+    last_user_scan as last_select,
+    last_user_update as last_update_or_insert
+from sys.dm_db_index_usage_stats
+where object_id = object_id('dbo.Routes')
+</code></pre>
+</li>
+<li><input disabled="" type="checkbox"/>
+Cheque periodicamente o uso da tabela ao longo do tempo desejado (recomendo por um período entre 1 dia e 1 mês, 1 semana sendo um bom meio-termo)</li>
+</ul>
+</li>
+</ul>
+<h4 id="migração-de-delete-e-update"><a class="header" href="#migração-de-delete-e-update">Migração de DELETE e UPDATE</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Migrar as operações de delete e update da tabela antiga para a tabela nova</li>
+</ul>
+<blockquote>
+<p>É IMPORTANTE que as operações de delete e update da tabela antiga sejam migradas antes da operação de insert para evitar o seguinte cenário:</p>
+<ul>
+<li>INSERT da linha X na tabela NOVA [pois já foi migrado]</li>
+<li>DELETE da linha X na tabela ANTIGA [pois ainda não foi migrado]</li>
+<li><strong>PROBLEMA</strong>: Erro, pois a linha X não existe na tabela antiga pois foi criada direta na tabela nova</li>
+</ul>
+</blockquote>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Scripts</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Processadores</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Usos na API</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Substitua os usos de exclusão e atualização da classe antiga pela classe nova</li>
+<li><input disabled="" type="checkbox"/>
+Confirme que todos os testes ainda estão passando</li>
+</ul>
+</li>
+</ul>
+<h4 id="migração-de-insert"><a class="header" href="#migração-de-insert">Migração de INSERT</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Migrar as operações de insert da tabela antiga para a tabela nova</p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Scripts</li>
+<li><input disabled="" type="checkbox"/>
+Processadores</li>
+<li><input disabled="" type="checkbox"/>
+Usos na API
+<ul>
+<li><input disabled="" type="checkbox"/>
+Substitua todos os usos da classe antiga pela classe nova (devem ter sobrado apenas operações de insert)</li>
+<li><input disabled="" type="checkbox"/>
+Delete a classe antiga</li>
+<li><input disabled="" type="checkbox"/>
+Confirme que todos os testes ainda estão passando</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="acompanhamento-final"><a class="header" href="#acompanhamento-final">Acompanhamento final</a></h4>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<p>Acompanhe o uso da tabela periodicamente para confirmar que ela deixou de ser usada</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Prefixe o nome da tabela com &quot;__TO_BE_DELETED__&quot;</p>
+</li>
+<li><input disabled="" type="checkbox"/>
+<p>Após algumas semanas, delete a tabela antiga</p>
+</li>
+</ul>
 
                     </main>
 
