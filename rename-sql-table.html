@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Repositores - Mobiltracker MdBook</title>
+        <title>How to rename a SQL Table - Mobiltracker MdBook</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html" class="active"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html" class="active"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,35 +134,46 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="repositories"><a class="header" href="#repositories">Repositories</a></h1>
-<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
-<p>The goal of this documentation is to help you create and manage our git repositories.</p>
+                        <h1 id="how-to-rename-a-sql-table"><a class="header" href="#how-to-rename-a-sql-table">How to rename a SQL Table</a></h1>
+<p>Most table migrations will affect a lot of different proccesses and can cause irreversible damages.
+So, before starting any migration, make sure that the whole team is aware of the changes and make sure that they are worth it.</p>
+<p>We have different migration strategies depending on the characteristics of the table.
+Take the following quiz to find the one that best suit your needs.</p>
+<p>Does the table have only one or very few updating processes?</p>
 <blockquote>
-<p>This page is still a work in progress. We can list the missing topics here:</p>
+<p><strong>NO</strong>: Next question.</p>
+</blockquote>
+<blockquote>
+<p><strong>YES</strong>: Use the View Strategy</p>
+<p>The idea behind this strategy is to replace the current table with a view of the new one and then quickly point the updating process to the new table. This change wont break the reading processes because they'll read from the view and so you can migrate them at your own pace.</p>
+<p>How to do it:</p>
 <ul>
-<li><del>naming</del></li>
-<li>monorepo vs multi-repo</li>
+<li>Create new table</li>
+<li>[Quickly] Delete old table, create view pointing to the new table with the name of the old table and migrate the updating process to the new table</li>
+<li>Migrate the read processes to the new table</li>
+<li>Make sure the view is not being used anymore</li>
+<li>Delete old table</li>
 </ul>
 </blockquote>
-<h2 id="repository-naming"><a class="header" href="#repository-naming">Repository naming</a></h2>
-<p>The preferred format is <code>[domain/sytem]</code>-<code>[type]</code>-<code>[complement, optional]</code>.
-Examples:</p>
-<ul>
-<li>mobiltracker-app-monitor: <code>[mobiltracker]</code>-<code>[app]</code>-<code>[monitor]</code></li>
-<li>vanescola-app-pais: : <code>[vanescola]</code>-<code>[app]</code>-<code>[pais]</code></li>
-<li>vanescola-api: <code>[vanescola]</code>-<code>[api]</code>-<code>[]</code> (no complement)</li>
-<li>vanescola-registration-form: <code>[vanescola]</code>-<code>[registration-form]</code>-<code>[]</code> (no complement)</li>
-</ul>
+<p>Is the table huge?</p>
+<blockquote>
+<p><strong>YES</strong>: Next question</p>
+</blockquote>
+<blockquote>
+<p><strong>NO</strong>: Use the Duplication Strategy</p>
+<p>The idea behind this strategy is to duplicate the old table to the new one and keep it updated so that you can migrate it at your own pace.
+This strategy is ideal for tables that are accessed and updated by multiple processes, but it takes a lot of space due to the duplication, so it is not recommended for tables with too much data.</p>
+<p>We have a issue template with a step-by-step tutorial on the mobiltracker-data repository. Create a issue from this template to follow this tutorial and to bring visibility to this migration.</p>
+<p>Click <a href="https://github.com/mobiltracker/mobiltracker-data/blob/master/.github/ISSUE_TEMPLATE/mwp--multiple-writing-processes--table-renaming-migration-.md">here</a> to see the template.</p>
+</blockquote>
+<p>???</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="redux.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="utils.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a rel="next" href="responsive-tables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -170,11 +181,8 @@ Examples:</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="redux.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="utils.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a rel="next" href="responsive-tables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
