@@ -10,3 +10,7 @@
 - [Responsive tables](./responsive-tables.md)
 - [Utils](./utils.md)
 - [How to rename a SQL Table](./rename-sql-table.md)
+
+# Articles
+
+- [VanEscola ScenarioBuilder History](./scenario-builder-history.md)
