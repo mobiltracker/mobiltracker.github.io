@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">7.</strong> VanEscola ScenarioBuilder History</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -629,6 +629,107 @@ This strategy is ideal for tables that are accessed and updated by multiple proc
 <p>Click <a href="https://github.com/mobiltracker/mobiltracker-data/blob/master/.github/ISSUE_TEMPLATE/mwp--multiple-writing-processes--table-renaming-migration-.md">here</a> to see the template.</p>
 </blockquote>
 <p>???</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="draft-vanescola-scenariobuilder-history"><a class="header" href="#draft-vanescola-scenariobuilder-history">[DRAFT] VanEscola ScenarioBuilder History</a></h1>
+<blockquote>
+<p>This article is under construction!</p>
+</blockquote>
+<h3 id="to-do"><a class="header" href="#to-do">TO DO:</a></h3>
+<ul>
+<li>Add code examples</li>
+<li>Write a second draft</li>
+</ul>
+<p>How did we end up with the VanEscola Scenario Builder.</p>
+<h3 id="test-implementation"><a class="header" href="#test-implementation">Test implementation</a></h3>
+<p>Let's create a basic test from scratch on C#.</p>
+<p>We use a library called Xunit. It allow us to run tests and assert values.</p>
+<p>Run this basic test on Visual Studio.</p>
+<pre><code class="language-c#">using Xunit;
+
+namespace Test
+{
+    public class TestClass
+    {
+        [Fact]
+        public void TestA()
+        {
+            Assert.Equal(2, 1 + 1);
+        }
+    }
+}
+
+</code></pre>
+<h2 id="problem-1-we-need-tests"><a class="header" href="#problem-1-we-need-tests">Problem 1: We need tests!</a></h2>
+<p>Let's model a fictional integration test.</p>
+<pre><code class="language-c#">[Fact]
+public void BasicIntegrationTest() {
+    // First, we need to connect to the database
+    var database = connectToDatabase();
+
+    // Then, we clean the database so that the last test data doesnt interfere this one
+    database.cleanDatabase();
+
+    // Then we fill the database with the data we need for this test
+    var user = new User() { };
+    database.Users.add(user);
+
+    var pet = new Pet() { owner = user };
+    database.Pets.add(pet);
+
+    // We start our API
+    var API = initializeApi();
+    createMockApi();
+
+    // apply test actions
+    ...
+
+    // validate result
+    ...
+}
+</code></pre>
+<h2 id="code-smell-1-duplication-of-test-initialization"><a class="header" href="#code-smell-1-duplication-of-test-initialization">Code smell 1: Duplication of test initialization</a></h2>
+<p>After a few tests, most of this code will be duplicated.</p>
+<p>We then extracted all the repeating code to a class named Scenario that will represent each test environment.</p>
+<h2 id="code-smell-2-duplication-of-scenario-setup"><a class="header" href="#code-smell-2-duplication-of-scenario-setup">Code smell 2: Duplication of scenario setup</a></h2>
+<p>There is still have a lot of duplication because the test setups will always be slightly different for each test.</p>
+<p>Lets create a ScenarioBuilder to facilitate the setup of different Scenarios. Then, let's extract each of our functions to a reusable build step of our builder.</p>
+<h2 id="code-smell-3-same-build-steps-always-appearing-together"><a class="header" href="#code-smell-3-same-build-steps-always-appearing-together">Code smell 3: Same build steps always appearing together</a></h2>
+<p>Note that the &quot;AddLogin&quot; and &quot;AddTokenToClient&quot; always appear together, this points to a bad separation of build steps. What we actually want is to represent the funcionality of &quot;AddUserAuthorization&quot; to use the UserToken in the HttpClient to simulate a loggedIn User. In the same way, we dont want to create a Membership separately from an User because we'll always need both.</p>
+<h2 id="code-smell-4-multiple-implementations-of-adduser"><a class="header" href="#code-smell-4-multiple-implementations-of-adduser">Code smell 4: Multiple implementations of AddUser</a></h2>
+<p>Instead of multiple implementations for each user, we can just parameterize our AddUser function for much more flexibility.</p>
+<h2 id="code-smell-5-passing-the-same-parameters-on-most-adduser-functions"><a class="header" href="#code-smell-5-passing-the-same-parameters-on-most-adduser-functions">Code smell 5: Passing the same parameters on most AddUser functions</a></h2>
+<p>Most of our AddUser functions will always take the same name and most of the time, we dont even care what the user is called, so lets just transform the &quot;name&quot; argument into an optional parameter. This way, we dont have to pass the same name everytime.</p>
+<h2 id="code-smell-6-too-many-arguments-on-a-build-step"><a class="header" href="#code-smell-6-too-many-arguments-on-a-build-step">Code smell 6: Too many arguments on a build step</a></h2>
+<p>Everytime we needed an entity with a specific value, we parameterized it's creation function. Eventually, our build step will look like this.</p>
+<p>Most of the tests that call this function dont need any specific value, but there are a few that need their values to be some exact value.</p>
+<p>Let's replace all the step parameters with a single optional setup function. This way, the tests that need a complete setup can make all this changes through a single parameter.</p>
+<h2 id="code-smell-7-same-parameters-appearing-in-multiples-tests"><a class="header" href="#code-smell-7-same-parameters-appearing-in-multiples-tests">Code smell 7: Same parameters appearing in multiples tests</a></h2>
+<h3 id="why"><a class="header" href="#why">Why?</a></h3>
+<p>Some entities have properties that should be unique to each one, for example, the phonenumber of an user. When creating a scenario for a test that needs two users, we have to manually set at least one of the phonenumbers to avoid two users with the same one. And then, even though we dont need any specific value for a phonenumber, we have to set this manually everytime we have at least two users</p>
+<h3 id="how-to-fix-it"><a class="header" href="#how-to-fix-it">How to fix it?</a></h3>
+<p>Instead of using the same default phonenumber for each user, we can generate a random phonenumber everytime the AddUser function is called. This way, we can generate multiples users without having to manually setup their phonenumbers to avoid collision.</p>
+<p>We use a library called Bogus that have multiple options for randomly generating different data sets like phonenumber, street address, names, etc.</p>
+<h2 id="problem-2-the-rise-of-the-heisenbugs"><a class="header" href="#problem-2-the-rise-of-the-heisenbugs">Problem 2: The Rise of the Heisenbugs</a></h2>
+<h3 id="what"><a class="header" href="#what">What?</a></h3>
+<p>Some tests failing only sometimes.</p>
+<h3 id="why-1"><a class="header" href="#why-1">Why?</a></h3>
+<p>Due to our randomly generated values, sometimes a generated value breaks our test either because it is invalid or our code is broken, but then running it again generates a different value that works.</p>
+<h3 id="how-to-fix-it-1"><a class="header" href="#how-to-fix-it-1">How to fix it?</a></h3>
+<p>The Bogus library allows us to set a fixed seed. This way, even though the values used are different between each other, they will always be the same ones between runs.</p>
+<h2 id="code-smell-8-bogus-constructor-sucks"><a class="header" href="#code-smell-8-bogus-constructor-sucks">Code smell 8: Bogus constructor sucks</a></h2>
+<h3 id="why-2"><a class="header" href="#why-2">Why?</a></h3>
+<p>The expected Bogus use is to create a different builder for each entity. This sucks because most of the time, all we want is a single simple entity and dont want to create a whole builder for it.</p>
+<h3 id="how-to-fix-it-2"><a class="header" href="#how-to-fix-it-2">How to fix it?</a></h3>
+<p>Bogus allow us to create a function that creates a randomized value. This allow for much simpler and flexible usages of the Bogus library.</p>
+<h2 id="code-smell-9-setting-up-entity-relationships-appearing-a-lot-of-times"><a class="header" href="#code-smell-9-setting-up-entity-relationships-appearing-a-lot-of-times">Code smell 9: Setting up entity relationships appearing a lot of times</a></h2>
+<h3 id="why-3"><a class="header" href="#why-3">Why?</a></h3>
+<p>A lot of entities have no meaning by themselves or need another entity to exist, for example Membership and User. There is no Membership without an User. And so, everytime we create a Membership, we have to create a relationship between them.</p>
+<h3 id="how-to-fix-it-3"><a class="header" href="#how-to-fix-it-3">How to fix it?</a></h3>
+<p>If the entity being created needs another entity to exist, let's expect for it to already be created and automatically relate the created entity to this one.</p>
+<h2 id="problem-3-entity-expected-for-relationship-doesnt-exist"><a class="header" href="#problem-3-entity-expected-for-relationship-doesnt-exist">Problem 3: Entity expected for relationship doesnt exist</a></h2>
+<h3 id="why-4"><a class="header" href="#why-4">Why?</a></h3>
+<p>Eventually, we'll forget the entities that another entity will need and addMembership without having called a addUser first. This will break the test saying something along the lines of &quot;No User found&quot; and it might take us a few annoying minutes of debugging before realizing our small mistake.</p>
+<h3 id="how-to-fix-it-4"><a class="header" href="#how-to-fix-it-4">How to fix it?</a></h3>
+<p>Assert that everything that your entity needs to be created is ready, and if not, throw a more descriptive error. For example, when using a addMembership without calling an addUser first can result in a &quot;Could not create Membership. No User was found. Make sure to call addUser() BEFORE calling the addMembership() function&quot;. This will save you a lot of time and stress.</p>
 
                     </main>
 
