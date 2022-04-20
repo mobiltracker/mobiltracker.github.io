@@ -225,9 +225,9 @@ Exemplos:
 - User
 - Alert
 
-#### Atributo
+#### Propriedade
 
-Propriedade de um objeto do banco de dados, equivalente ao que seria uma coluna de uma linha da tabela.
+Atributo de um objeto do banco de dados, equivalente ao que seria uma coluna de uma linha da tabela, podendo também ser uma relação com outra entidade.
 
 Exemplos:
 
@@ -432,6 +432,8 @@ Exemplo:
 Modificações:
 
 - PUT {routeId}/route-students => route/{routeId}/students
+- POST/DELETE owner/parents/{parentId}/students/{studentId} =>
+  PUT owner/parents/{parentId}/students
 
 ### PUT [Entidades]/[Propriedade]
 
