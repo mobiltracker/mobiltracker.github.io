@@ -1,0 +1,737 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>API Conventions - Mobiltracker MdBook</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">7.</strong> VanEscola ScenarioBuilder History</a></li><li class="chapter-item expanded "><a href="api.html" class="active"><strong aria-hidden="true">8.</strong> API Conventions</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Mobiltracker MdBook</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="proposta-de-boas-práticas-de-rotas-e-controllers"><a class="header" href="#proposta-de-boas-práticas-de-rotas-e-controllers">Proposta de boas práticas de rotas e controllers</a></h1>
+<h2 id="rotas-atuais"><a class="header" href="#rotas-atuais">Rotas atuais</a></h2>
+<details open>
+<summary>Lista atual de rotas e controllers do VanEscola</summary>
+<h3 id="vanscontroller"><a class="header" href="#vanscontroller">VansController</a></h3>
+<ul>
+<li>GET Parents/Vans
+<ul>
+<li>policy: parent</li>
+<li>return vans w/ studentIds</li>
+</ul>
+</li>
+</ul>
+<h3 id="vanownercontroller"><a class="header" href="#vanownercontroller">VanOwnerController</a></h3>
+<ul>
+<li>GET parent/vanowner
+<ul>
+<li>policy: parent</li>
+<li>return vanowner data (business name, userid and phonenumber)</li>
+</ul>
+</li>
+</ul>
+<h3 id="vancontroller"><a class="header" href="#vancontroller">VanController</a></h3>
+<ul>
+<li>POST van/locations-rnbg
+<ul>
+<li>policy: driver</li>
+<li>send locations to mobiltracker</li>
+</ul>
+</li>
+<li>POST van/mtk-endpoint
+<ul>
+<li>policy: público</li>
+<li>receive locations from mobiltracker</li>
+</ul>
+</li>
+<li>GET van
+<ul>
+<li>policy: driver</li>
+<li>vanId e nome da van do motorista</li>
+</ul>
+</li>
+<li>DELETE van/current-route
+<ul>
+<li>policy: driver</li>
+<li>deleta current-route</li>
+</ul>
+</li>
+<li>POST van/current-route
+<ul>
+<li>policy: driver</li>
+<li>cria current-route</li>
+</ul>
+</li>
+</ul>
+<h3 id="usercontroller"><a class="header" href="#usercontroller">UserController</a></h3>
+<ul>
+<li>GET user =&gt;
+<ul>
+<li>legacy</li>
+<li>policy: Driver</li>
+<li>returns user</li>
+<li>talvez não seja mais usado</li>
+</ul>
+</li>
+<li>GET driver/user
+<ul>
+<li>policy: Driver</li>
+<li>retorna userId, email e username do motorista</li>
+</ul>
+</li>
+<li>GET parent/user
+<ul>
+<li>policy: Parent</li>
+<li>retorna nome e phonenumber do pai</li>
+</ul>
+</li>
+<li>GET owner/user
+<ul>
+<li>policy: Owner</li>
+<li>retorna userId, nome, phone e businessName do owner</li>
+</ul>
+</li>
+<li>PUT owner/user
+<ul>
+<li>policy: Owner</li>
+<li>atualiza nome e businessName</li>
+</ul>
+</li>
+<li>POST registration
+<ul>
+<li>policy: público</li>
+<li>cadastra Owner</li>
+</ul>
+</li>
+<li>PUT activation
+<ul>
+<li>policy: público</li>
+<li>ativa owner</li>
+</ul>
+</li>
+<li>PUT recover-password
+<ul>
+<li>policy: público</li>
+<li>manda e-mail de recuperação de senha</li>
+</ul>
+</li>
+<li>PUT reset-password
+<ul>
+<li>policy: público</li>
+<li>reseta a senha do usuário</li>
+</ul>
+</li>
+<li>PUT change-password
+<ul>
+<li>policy: owner</li>
+<li>muda a senha do owner</li>
+</ul>
+</li>
+<li>PUT resend/registration
+<ul>
+<li>policy: público</li>
+<li>reenvia e-mail de ativação de conta</li>
+</ul>
+</li>
+</ul>
+<h3 id="studentscontroller"><a class="header" href="#studentscontroller">StudentsController</a></h3>
+<ul>
+<li>GET students
+<ul>
+<li>legacy</li>
+<li>policy: Driver</li>
+<li>redirect para get students as driver</li>
+</ul>
+</li>
+<li>GET owner/students
+<ul>
+<li>policy: Owner</li>
+<li>get students of owner</li>
+</ul>
+</li>
+<li>GET driver/students
+<ul>
+<li>policy: Driver</li>
+<li>get students of driver</li>
+</ul>
+</li>
+<li>GET parent/students
+<ul>
+<li>policy: Parent</li>
+<li>get students of parent</li>
+</ul>
+</li>
+<li>POST owner/student
+<ul>
+<li>policy: Owner</li>
+<li>create student</li>
+</ul>
+</li>
+<li>PUT owner/student/{id}
+<ul>
+<li>policy: Owner</li>
+<li>update student name, school and isActive</li>
+</ul>
+</li>
+<li>POST owner/parents/{parentId}/students/{studentId}
+<ul>
+<li>policy: Owner</li>
+<li>create parent-student relationship</li>
+</ul>
+</li>
+<li>DELETE owner/parents/{parentId}/students/{studentId}
+<ul>
+<li>policy: Owner</li>
+<li>delete parent-student relationship</li>
+</ul>
+</li>
+<li>DELETE owner/student/{studentId}
+<ul>
+<li>policy: Owner</li>
+<li>delete student</li>
+</ul>
+</li>
+</ul>
+<h3 id="schoolscontroller"><a class="header" href="#schoolscontroller">SchoolsController</a></h3>
+<ul>
+<li>GET schools
+<ul>
+<li>policy: Driver</li>
+<li>legacy redirect to get school as driver</li>
+</ul>
+</li>
+<li>GET driver/schools
+<ul>
+<li>policy: Driver</li>
+<li>get schools from the driver's owner</li>
+</ul>
+</li>
+<li>GET owner/schools
+<ul>
+<li>policy: Owner</li>
+<li>get schools from owner</li>
+</ul>
+</li>
+<li>POST owner/schools
+<ul>
+<li>policy: Owner</li>
+<li>create school</li>
+</ul>
+</li>
+<li>PUT owner/schools/{schoolId}
+<ul>
+<li>policy: Owner</li>
+<li>update school</li>
+</ul>
+</li>
+<li>DELETE owner/schools/{schoolId}/delete
+<ul>
+<li>policy: Owner</li>
+<li>delete school</li>
+</ul>
+</li>
+<li>GET parent/schools
+<ul>
+<li>policy: Authorize</li>
+<li>get schools from parent students</li>
+</ul>
+</li>
+</ul>
+<h3 id="routescontroller"><a class="header" href="#routescontroller">RoutesController</a></h3>
+<ul>
+<li>GET routes
+<ul>
+<li>policy: Driver</li>
+<li>retorna todos templates de rotas daquela vanId</li>
+</ul>
+</li>
+<li>POST routes
+<ul>
+<li>policy: Driver</li>
+<li>cria template de rota</li>
+</ul>
+</li>
+<li>PUT routes/{routeId}
+<ul>
+<li>policy: Driver</li>
+<li>atualiza rota</li>
+</ul>
+</li>
+<li>DELETE routes/{routeId}
+<ul>
+<li>policy: Driver</li>
+<li>deleta rota</li>
+</ul>
+</li>
+<li>POST routes/{routeId}/events
+<ul>
+<li>policy: Driver</li>
+<li>cria evento de rota</li>
+</ul>
+</li>
+<li>PUT {routeId}/route-students ou {routeId}/route-items
+<ul>
+<li>policy: Driver</li>
+<li>adiciona item a rota</li>
+</ul>
+</li>
+<li>GET owner/routes
+<ul>
+<li>policy: Owner</li>
+<li>retorna rota de todas vans</li>
+</ul>
+</li>
+</ul>
+<h3 id="reportscontroller"><a class="header" href="#reportscontroller">ReportsController</a></h3>
+<ul>
+<li>GET reports
+<ul>
+<li>policy: Driver</li>
+<li>retorna resumo de atividades de responsáveis</li>
+</ul>
+</li>
+</ul>
+<h3 id="parentscontroller"><a class="header" href="#parentscontroller">ParentsController</a></h3>
+<ul>
+<li>GET owner/parents
+<ul>
+<li>policy: Owner</li>
+<li>retorna parents do owner</li>
+</ul>
+</li>
+<li>POST owner/parent
+<ul>
+<li>policy: Owner</li>
+<li>cria parent</li>
+</ul>
+</li>
+<li>PUT owner/parent/{id}
+<ul>
+<li>policy: Owner</li>
+<li>atualiza parent</li>
+</ul>
+</li>
+<li>DELETE owner/parent/{parentId}
+<ul>
+<li>policy: Owner</li>
+<li>deleta parent</li>
+</ul>
+</li>
+</ul>
+<h3 id="notificationcontroller"><a class="header" href="#notificationcontroller">NotificationController</a></h3>
+<ul>
+<li>GET notifications/messages
+<ul>
+<li>policy: Parent</li>
+<li>retorna todas as notificações de um pai</li>
+</ul>
+</li>
+<li>PUT notifications/seen
+<ul>
+<li>policy: Parent</li>
+<li>atualiza todas notificações para vistas</li>
+</ul>
+</li>
+</ul>
+<h3 id="driverscontroller"><a class="header" href="#driverscontroller">DriversController</a></h3>
+<ul>
+<li>GET Owner/Drivers
+<ul>
+<li>policy: Owner</li>
+<li>retorna os drivers do owner</li>
+</ul>
+</li>
+<li>GET Parent/Drivers
+<ul>
+<li>policy: Parent</li>
+<li>retorna os drivers do parent</li>
+</ul>
+</li>
+</ul>
+<h3 id="authcontroller"><a class="header" href="#authcontroller">AuthController</a></h3>
+<ul>
+<li>POST auth/token
+<ul>
+<li>policy: Público</li>
+<li>loga o usuário</li>
+</ul>
+</li>
+<li>DELETE auth/ticket
+<ul>
+<li>policy: Authorize</li>
+<li>deleta login</li>
+</ul>
+</li>
+<li>POST auth/ticket
+<ul>
+<li>policy: Público</li>
+<li>loga com authticket</li>
+</ul>
+</li>
+<li>POST password
+<ul>
+<li>policy: Driver</li>
+<li>muda password do driver</li>
+</ul>
+</li>
+<li>PUT auth/registration-id
+<ul>
+<li>policy: Authorize</li>
+<li>altera registrationId do usuário</li>
+</ul>
+</li>
+</ul>
+</details>
+<h2 id="padronização"><a class="header" href="#padronização">Padronização</a></h2>
+<h3 id="vocabulário"><a class="header" href="#vocabulário">Vocabulário</a></h3>
+<h4 id="entidade"><a class="header" href="#entidade">Entidade</a></h4>
+<p>Objeto do banco de dados, parcialmente equivalente ao que seria uma linha da tabela.</p>
+<p>Exemplos:</p>
+<ul>
+<li>Tracker</li>
+<li>User</li>
+<li>Alert</li>
+</ul>
+<h4 id="atributo"><a class="header" href="#atributo">Atributo</a></h4>
+<p>Propriedade de um objeto do banco de dados, equivalente ao que seria uma coluna de uma linha da tabela.</p>
+<p>Exemplos:</p>
+<ul>
+<li>IsActive (do Tracker)</li>
+<li>IsOnline (do Tracker)</li>
+<li>Seen (do Notification)</li>
+</ul>
+<h3 id="controller"><a class="header" href="#controller">Controller</a></h3>
+<p>Um controller deve ser responsável por uma única entidade. Toda atualização e leitura dessa entidade deve estar nesse controller.</p>
+<h4 id="nomenclatura"><a class="header" href="#nomenclatura">Nomenclatura</a></h4>
+<p>Nome do controller: [Entitades]Controller (sempre no plural)</p>
+<p>Exemplos:</p>
+<ul>
+<li>VansController</li>
+<li>StudentsController</li>
+<li>SchoolsController</li>
+<li>RoutesController</li>
+<li>ParentsController</li>
+<li>ReportsController</li>
+<li>DriversController</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>VanOwnerController =&gt; OwnersController</li>
+<li>VanController =&gt; VansController</li>
+<li>UserController =&gt; UsersController</li>
+<li>criação do RouteEventsController (para rota de Post route/{id}/events que está no RoutesController)</li>
+<li>criação do CurrentRouteController (para rota de POST e DELETE van/current-route)</li>
+<li>NotificationController =&gt; NotificationsController</li>
+</ul>
+<p>Exceções / o que fazer?</p>
+<ul>
+<li>AuthController
+<ul>
+<li>Não existe um conceito de &quot;Auths&quot; no banco de dados, é uma aglomeração de diferentes formas de login e autorização de aplicativos</li>
+</ul>
+</li>
+</ul>
+<h4 id="implementação"><a class="header" href="#implementação">Implementação</a></h4>
+<p>O controller deve se encontrar em: controllers/[entidades]/[entidades]Controller.cs</p>
+<p>É importante que ele seja implementado como uma partial class para que cada rota seja implementada como uma extensão do controller em um arquivo próprio.</p>
+<pre><code class="language-c#">// Exemplo para um EntitiesController.cs no projeto VanEscola.Api
+using Microsoft.AspNetCore.Mvc;
+using VanEscola.Models;
+
+
+namespace VanEscola.Api.Controllers
+{
+    public partial class EntitiesController : Controller
+    {
+        public EntitiesController(AppDbContext dbContext)
+        {
+            this.DbContext = dbContext;
+        }
+
+        public AppDbContext DbContext { get; private set; }
+    }
+}
+</code></pre>
+<h3 id="rotas"><a class="header" href="#rotas">Rotas</a></h3>
+<h4 id="estrutura-de-pastas"><a class="header" href="#estrutura-de-pastas">Estrutura de pastas</a></h4>
+<p>Cada rota deve ser um arquivo cujo nome reflete sua rota e método e deve se encontrar na pasta do seu controller.</p>
+<table><thead><tr><th style="text-align: center"><img src="../images/api_files_example.png" alt="Exemplo de projeto com essa estrutura" /></th></tr></thead><tbody>
+<tr><td style="text-align: center"><b>Exemplo de projeto nessa estrutura de pastas</b></td></tr>
+</tbody></table>
+<h4 id="perfis"><a class="header" href="#perfis">Perfis</a></h4>
+<p>No caso da API VanEscola, existem diferentes perfis de usuários que chamarão cada rota. Se a rota for um limitada para um perfil específico, o perfil deve prefixar a rota.</p>
+<p>Exemplo:</p>
+<ul>
+<li>GET driver/user</li>
+<li>GET parent/user</li>
+<li>GET owner/user</li>
+<li>POST registration (pública)</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>GET parents/vans =&gt; GET parent/vans</li>
+<li>GET van =&gt; GET driver/van</li>
+<li>POST/DELETE van/current-route =&gt; POST/DELETE driver/current-route</li>
+<li>Remover GET User (já existe GET driver/user)</li>
+<li>PUT change-password =&gt; PUT owner/change-password</li>
+<li>Remover GET Students (já existe GET driver/students)</li>
+<li>Remover GET Schools (já existe GET driver/schools)</li>
+<li>GET/POST/PUT/DELETE routes =&gt; GET/POST/PUT/DELETE driver/routes</li>
+<li>POST routes/{routeId}/events =&gt; POST driver/route-event</li>
+<li>PUT {routeId}/route-students ou PUT {routeId}/route-items =&gt; PUT driver/route/{routeId}/items</li>
+<li>GET reports =&gt; GET driver/reports</li>
+<li>GET notifications/messages =&gt; GET parent/notifications</li>
+<li>PUT notifications/seen =&gt; PUT parent/notifications/seen</li>
+<li>POST password =&gt; POST driver/change-password</li>
+</ul>
+<p>Exceções / o que fazer?:</p>
+<ul>
+<li>POST van/locations-rnbg (chamada apenas por driver)</li>
+</ul>
+<h4 id="padrões-comuns-de-rotas"><a class="header" href="#padrões-comuns-de-rotas">Padrões comuns de rotas</a></h4>
+<h3 id="get-entidades"><a class="header" href="#get-entidades">GET [Entidades]</a></h3>
+<p>Retorna uma lista com os dados de todas as entidades.</p>
+<p>Exemplos:</p>
+<ul>
+<li>GET driver/students</li>
+<li>GET parent/students</li>
+<li>GET driver/schools</li>
+<li>GET owner/parents</li>
+<li>GET notifications/messages</li>
+</ul>
+<h3 id="get-entidade"><a class="header" href="#get-entidade">GET [Entidade]</a></h3>
+<p>Retorna a única entidade relacionada ao usuário que a chamou.</p>
+<p>Exemplos:</p>
+<ul>
+<li>GET van</li>
+<li>GET parent/user</li>
+<li>GET owner/user</li>
+<li>GET driver/user</li>
+</ul>
+<h3 id="post-entidade"><a class="header" href="#post-entidade">POST [Entidade]</a></h3>
+<p>Cria uma entidade.</p>
+<p>Exemplos:</p>
+<ul>
+<li>POST van/current-route</li>
+<li>POST owner/student</li>
+<li>POST owner/parent</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>POST owner/schools =&gt; POST owner/school</li>
+<li>POST routes =&gt; POST route</li>
+</ul>
+<h3 id="delete-entidade"><a class="header" href="#delete-entidade">DELETE [Entidade]</a></h3>
+<p>Deleta entidade do usuário (quando existe apenas uma entidade do usuário).</p>
+<p>Exemplos:</p>
+<ul>
+<li>DELETE van/current-route</li>
+<li>DELETE auth/ticket</li>
+</ul>
+<h3 id="delete-entidadeentidade-id"><a class="header" href="#delete-entidadeentidade-id">DELETE [Entidade]/{entidade-id}</a></h3>
+<p>Deleta entidade com entidade-id (quando podem existir múltiplas entidades de um mesmo usuário).</p>
+<p>Exemplos:</p>
+<ul>
+<li>DELETE owner/student/{studentId}</li>
+<li>DELETE owner/parent/{parentId}</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>DELETE owner/schools/{schoolId}/delete =&gt; DELETE owner/schools/{schoolId}</li>
+<li>DELETE routes/{routeId} =&gt; DELETE route/{routeId}</li>
+</ul>
+<h3 id="put-entidade"><a class="header" href="#put-entidade">PUT [Entidade]</a></h3>
+<p>Atualiza dados da entidade do usuário (quando existe apenas uma entidade do usuário).</p>
+<p>Exemplos:</p>
+<ul>
+<li>PUT owner/user</li>
+</ul>
+<h3 id="put-entidadeentidade-id"><a class="header" href="#put-entidadeentidade-id">PUT [Entidade]/{entidade-id}</a></h3>
+<p>Atualiza os dados de uma entidade com entidade-id (quando podem existir múltiplas entidades de um mesmo usuário).</p>
+<p>Exemplos:</p>
+<ul>
+<li>PUT owner/student/{student-id}</li>
+<li>PUT owner/parent/{parentId}</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>PUT owner/user =&gt; PUT owner/user/{user-id}</li>
+<li>PUT owner/schools/{schoolId} =&gt; PUT owner/school/{schoolId}</li>
+<li>PUT routes/{routeId} =&gt; PUT route/{routeId}</li>
+</ul>
+<h3 id="put-entidadeentidadeidpropriedade"><a class="header" href="#put-entidadeentidadeidpropriedade">PUT [Entidade]/{entidadeId}/[Propriedade]</a></h3>
+<p>Atualiza uma propriedade da entidade.</p>
+<p>Exemplo:</p>
+<ul>
+<li>[NENHUM]</li>
+</ul>
+<p>Modificações:</p>
+<ul>
+<li>PUT {routeId}/route-students =&gt; route/{routeId}/students</li>
+</ul>
+<h3 id="put-entidadespropriedade"><a class="header" href="#put-entidadespropriedade">PUT [Entidades]/[Propriedade]</a></h3>
+<p>Atualiza uma propriedade de várias entidades.</p>
+<p>Exemplo:</p>
+<ul>
+<li>PUT notifications/seen</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="scenario-builder-history.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="scenario-builder-history.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
