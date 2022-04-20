@@ -1114,8 +1114,8 @@ public void BasicIntegrationTest() {
 <li>User</li>
 <li>Alert</li>
 </ul>
-<h4 id="atributo"><a class="header" href="#atributo">Atributo</a></h4>
-<p>Propriedade de um objeto do banco de dados, equivalente ao que seria uma coluna de uma linha da tabela.</p>
+<h4 id="propriedade"><a class="header" href="#propriedade">Propriedade</a></h4>
+<p>Atributo de um objeto do banco de dados, equivalente ao que seria uma coluna de uma linha da tabela, podendo também ser uma relação com outra entidade.</p>
 <p>Exemplos:</p>
 <ul>
 <li>IsActive (do Tracker)</li>
@@ -1290,6 +1290,8 @@ namespace VanEscola.Api.Controllers
 <p>Modificações:</p>
 <ul>
 <li>PUT {routeId}/route-students =&gt; route/{routeId}/students</li>
+<li>POST/DELETE owner/parents/{parentId}/students/{studentId} =&gt;
+PUT owner/parents/{parentId}/students</li>
 </ul>
 <h3 id="put-entidadespropriedade"><a class="header" href="#put-entidadespropriedade">PUT [Entidades]/[Propriedade]</a></h3>
 <p>Atualiza uma propriedade de várias entidades.</p>
