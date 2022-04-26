@@ -10,6 +10,7 @@
 - [Responsive tables](./responsive-tables.md)
 - [Utils](./utils.md)
 - [How to rename a SQL Table](./rename-sql-table.md)
+- [Conditional Types - Typescript](./ts-conditional-types.md)
 
 # Articles
 
