@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">7.</strong> VanEscola ScenarioBuilder History</a></li><li class="chapter-item expanded "><a href="api.html"><strong aria-hidden="true">8.</strong> API Conventions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded "><a href="ts-conditional-types.html"><strong aria-hidden="true">7.</strong> Conditional Types - Typescript</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">8.</strong> VanEscola ScenarioBuilder History</a></li><li class="chapter-item expanded "><a href="api.html"><strong aria-hidden="true">9.</strong> API Conventions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -629,6 +629,85 @@ This strategy is ideal for tables that are accessed and updated by multiple proc
 <p>Click <a href="https://github.com/mobiltracker/mobiltracker-data/blob/master/.github/ISSUE_TEMPLATE/mwp--multiple-writing-processes--table-renaming-migration-.md">here</a> to see the template.</p>
 </blockquote>
 <p>???</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conditional-types---typescript"><a class="header" href="#conditional-types---typescript">Conditional Types - Typescript</a></h1>
+<h2 id="problem"><a class="header" href="#problem">Problem</a></h2>
+<p>Given a type like the one below:</p>
+<pre><code class="language-Typescript">type Parent = {
+  option: &quot;A&quot; | &quot;B&quot;;
+  children: { subOption: { a: true } | { b: true } };
+};
+</code></pre>
+<p>It's not possible to guarantee that <code>children</code> will have the correct <code>subOption</code>.</p>
+<pre><code class="language-Typescript">
+const foobar: Parent = {
+  // this is ok
+  option: &quot;A&quot;,
+  children: { subOption: { a: true } },
+};
+
+const foobar2: Parent = {
+  // this is wrong, but the compiler cannot ensure the correct type
+  option: &quot;A&quot;,
+  children: { subOption: { b: true } },
+};
+</code></pre>
+<h2 id="how-to-fix-this"><a class="header" href="#how-to-fix-this">How to fix this</a></h2>
+<p>To guarantee that <code>children</code> will have the correct type use <a href="https://www.typescriptlang.org/docs/handbook/2/conditional-types.html">conditional types</a>. So, the compiler is able to infer the correct type.</p>
+<pre><code class="language-Typescript">type Parent&lt;Option extends &quot;A&quot; | &quot;B&quot;&gt; = {
+  option: Option;
+  children: {
+    subOption: Option extends &quot;A&quot;
+      ? { a: true }
+      : Option extends &quot;B&quot;
+      ? { b: true }
+      : never;
+  };
+};
+
+const foobar: Parent&lt;&quot;A&quot;&gt; = {
+  option: &quot;A&quot;,
+  children: { subOption: { a: true } },
+};
+
+const foobar2: Parent&lt;&quot;A&quot;&gt; = {
+  option: &quot;A&quot;,
+  // @ts-expect-error
+  children: { subOption: { b: true } },
+</code></pre>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<p>Using conditional type we can set the properties of a column by the table's responsive type. Like this:</p>
+<pre><code class="language-Typescript">type ResponsiveType = &quot;shorten&quot; | &quot;movable&quot;;
+
+type ResponsiveTypePropsForShorten = { visible: boolean };
+type ResponsiveTypePropsForMovable = { move: boolean };
+
+type ResponsiveTypeProps&lt;R extends ResponsiveType&gt; = R extends &quot;shorten&quot;
+  ? ResponsiveTypePropsForShorten
+  : R extends &quot;movable&quot;
+  ? ResponsiveTypePropsForMovable
+  : never;
+
+type Table&lt;R extends ResponsiveType&gt; = {
+  responsiveType: R;
+  columns: Column&lt;R&gt;[];
+};
+
+type Column&lt;R extends ResponsiveType&gt; = {
+  responsiveTypeProps: ResponsiveTypeProps&lt;R&gt;;
+};
+
+const table1: Table&lt;&quot;shorten&quot;&gt; = {
+  responsiveType: &quot;shorten&quot;,
+  columns: [{ responsiveTypeProps: { visible: true } }],
+};
+
+const table2: Table&lt;&quot;movable&quot;&gt; = {
+  responsiveType: &quot;movable&quot;,
+  columns: [{ responsiveTypeProps: { move: false } }],
+};
+
+</code></pre>
+<p>If you want to see the full version of the example above <a href="https://github.com/mobiltracker/vanescola-portal-admin/blob/f0b41b27f28a44cb5236cd04127d590102577472/src/components/Table/Table.tsx">click here</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="draft-vanescola-scenariobuilder-history"><a class="header" href="#draft-vanescola-scenariobuilder-history">[DRAFT] VanEscola ScenarioBuilder History</a></h1>
 <blockquote>
 <p>This article is under construction!</p>
