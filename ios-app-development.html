@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Utils - Mobiltracker MdBook</title>
+        <title>iOS apps development - Mobiltracker MdBook</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html" class="active"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded "><a href="ts-conditional-types.html"><strong aria-hidden="true">7.</strong> Conditional Types - Typescript</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">8.</strong> VanEscola ScenarioBuilder History</a></li><li class="chapter-item expanded "><a href="api.html"><strong aria-hidden="true">9.</strong> API Conventions</a></li><li class="chapter-item expanded affix "><li class="part-title">Knowledge Base</li><li class="chapter-item expanded "><a href="ios-app-development.html"><strong aria-hidden="true">10.</strong> iOS apps development</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Best Practices</li><li class="chapter-item expanded "><a href="api-tests.html"><strong aria-hidden="true">1.</strong> Best Practices for Writing Tests</a></li><li class="chapter-item expanded "><a href="redux.html"><strong aria-hidden="true">2.</strong> Redux and Data Management</a></li><li class="chapter-item expanded "><a href="repositories.html"><strong aria-hidden="true">3.</strong> Repositores</a></li><li class="chapter-item expanded "><a href="responsive-tables.html"><strong aria-hidden="true">4.</strong> Responsive tables</a></li><li class="chapter-item expanded "><a href="utils.html"><strong aria-hidden="true">5.</strong> Utils</a></li><li class="chapter-item expanded "><a href="rename-sql-table.html"><strong aria-hidden="true">6.</strong> How to rename a SQL Table</a></li><li class="chapter-item expanded "><a href="ts-conditional-types.html"><strong aria-hidden="true">7.</strong> Conditional Types - Typescript</a></li><li class="chapter-item expanded affix "><li class="part-title">Articles</li><li class="chapter-item expanded "><a href="scenario-builder-history.html"><strong aria-hidden="true">8.</strong> VanEscola ScenarioBuilder History</a></li><li class="chapter-item expanded "><a href="api.html"><strong aria-hidden="true">9.</strong> API Conventions</a></li><li class="chapter-item expanded affix "><li class="part-title">Knowledge Base</li><li class="chapter-item expanded "><a href="ios-app-development.html" class="active"><strong aria-hidden="true">10.</strong> iOS apps development</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,59 +134,28 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="utils"><a class="header" href="#utils">Utils</a></h1>
-<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
-<p>The goal of this documentation is to set a standard for <code>utils</code> in our projects.</p>
-<h2 id="where-to-find-them"><a class="header" href="#where-to-find-them">Where to find them</a></h2>
-<p><code>utils</code> must be located inside a folder called <code>src/utils</code>. See an <a href="https://github.com/mobiltracker/mobiltracker-partner/tree/master/Mobiltracker.Partner.Web.Core/client/src/utils">example</a>.</p>
-<h2 id="common-utils"><a class="header" href="#common-utils">Common Utils</a></h2>
+                        <h1 id="apple-store-ios-apps-development"><a class="header" href="#apple-store-ios-apps-development">Apple Store iOS apps development</a></h1>
+<h2 id="glossário"><a class="header" href="#glossário">Glossário</a></h2>
+<h3 id="certificate"><a class="header" href="#certificate">Certificate</a></h3>
+<p>certificado que assina os apps</p>
+<h3 id="provisioning-profile"><a class="header" href="#provisioning-profile">Provisioning profile</a></h3>
 <ul>
-<li><a href="#phone-number-formatter">Phone number formatter</a></li>
-<li><a href="#cpf-cpnj-formatter">CPF-CNPJ formatter</a></li>
-<li><a href="#email-validator">Email Validator</a></li>
+<li>arquivo de metadados que acompanham a assinatura do app, dentro do ipa (executável/pacote de app do ios)</li>
+<li>tem informações tipo:
+<ul>
+<li>se é release, ou debug.</li>
+<li>se pode instalar direto em algum iphone.</li>
+<li>'permissões' do app, ex: push notifications</li>
 </ul>
-<h3 id="phone-number-formatter"><a class="header" href="#phone-number-formatter">Phone number formatter</a></h3>
-<pre><code class="language-Typescript">const formatPhoneNumber = (input: string) =&gt; {
-  let cleaned = input.replace(/\D/g, &quot;&quot;);
-  let match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
-
-  if (match) {
-    return &quot;(&quot; + match[1] + &quot;) &quot; + match[2] + &quot;-&quot; + match[3];
-  } else {
-    return cleaned;
-  }
-};
-</code></pre>
-<h3 id="cpf-cpnj-formatter"><a class="header" href="#cpf-cpnj-formatter">CPF-CPNJ formatter</a></h3>
-<pre><code class="language-Typescript">const formatCpfCnpj = (input: string) =&gt; {
-  let cleaned = input.replace(/\D/g, &quot;&quot;);
-  let cpfMatch = cleaned.match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/);
-  let cnpjMatch = cleaned.match(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/);
-
-  if (cpfMatch) {
-    return `${cpfMatch[1]}.${cpfMatch[2]}.${cpfMatch[3]}-${cpfMatch[4]}`;
-  } else if (cnpjMatch) {
-    return `${cnpjMatch[1]}.${cnpjMatch[2]}.${cnpjMatch[3]}/${cnpjMatch[4]}-${cnpjMatch[5]}`;
-  } else {
-    return cleaned;
-  }
-};
-</code></pre>
-<h3 id="email-validator"><a class="header" href="#email-validator">Email Validator</a></h3>
-<pre><code class="language-Typescript">function validateEmail(value: string) {
-  return /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/.test(value);
-};
-</code></pre>
+</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="responsive-tables.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="api.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a rel="next" href="rename-sql-table.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -194,11 +163,8 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="responsive-tables.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="api.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a rel="next" href="rename-sql-table.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
